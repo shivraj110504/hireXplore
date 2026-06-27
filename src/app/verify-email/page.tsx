@@ -60,6 +60,7 @@ export default function VerifyEmailPage() {
     try {
       // For better-auth, changing email requires a specific endpoint or update user method
       const { error } = await authClient.updateUser({
+        // @ts-expect-error - better-auth types might not expose email on updateUser
         email: email
       });
       if (error) {
@@ -100,7 +101,7 @@ export default function VerifyEmailPage() {
     e.preventDefault();
     setVerifying(true);
     try {
-      const { error } = await authClient.emailOtp.verifyEmailOTP({
+      const { error } = await authClient.emailOtp.verifyEmail({
         email: email,
         otp: otp,
       });
