@@ -5,7 +5,15 @@ import { createAuthMiddleware, APIError } from "better-auth/api";
 import { emailOTP } from "better-auth/plugins";
 import { Resend } from "resend";
 
-const client = new MongoClient(process.env.MONGODB_URI || "mongodb://localhost:27017");
+const uri = process.env.MONGODB_URI || "mongodb://localhost:27017";
+
+// Implement global caching pattern for serverless environments to prevent MongoTopologyClosedError
+let globalWithMongo = global as typeof globalThis & { _mongoClient?: MongoClient };
+
+if (!globalWithMongo._mongoClient) {
+  globalWithMongo._mongoClient = new MongoClient(uri);
+}
+const client = globalWithMongo._mongoClient;
 const db = client.db(process.env.DB_NAME || "hirexplore");
 const resend = new Resend(process.env.RESEND_API_KEY);
 
