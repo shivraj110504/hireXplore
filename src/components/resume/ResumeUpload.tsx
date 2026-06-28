@@ -91,10 +91,6 @@ export default function ResumeUpload({ onJobsFetched, isFetching, setIsFetching 
       // Add a timestamp to bypass aggressive browser caching (prevents 304 Not Modified)
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/jobs/fetch-all?t=${Date.now()}`, {
         method: "POST",
-        headers: {
-          'Cache-Control': 'no-cache, no-store, must-revalidate',
-          'Pragma': 'no-cache'
-        },
         body: formData
       });
       if (!res.ok) throw new Error("Failed to fetch jobs");
