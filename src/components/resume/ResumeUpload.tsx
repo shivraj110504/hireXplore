@@ -41,7 +41,16 @@ export default function ResumeUpload({ onJobsFetched, isFetching, setIsFetching 
         return;
       }
       setFile(selectedFile);
+      // Clear job duplicate cache so re-uploading ensures a fresh search
+      if (session?.user?.id) {
+        localStorage.removeItem(`seen_jobs_${session.user.id}`);
+      }
     }
+  };
+
+  const handleInputClick = (e: React.MouseEvent<HTMLInputElement>) => {
+    // Reset the input value so selecting the same file again triggers onChange
+    (e.target as HTMLInputElement).value = '';
   };
 
   const handleDrop = (e: React.DragEvent) => {
@@ -53,6 +62,9 @@ export default function ResumeUpload({ onJobsFetched, isFetching, setIsFetching 
         return;
       }
       setFile(selectedFile);
+      if (session?.user?.id) {
+        localStorage.removeItem(`seen_jobs_${session.user.id}`);
+      }
     }
   };
 
@@ -71,7 +83,19 @@ export default function ResumeUpload({ onJobsFetched, isFetching, setIsFetching 
     toast.info("Scraping live jobs and matching with your profile... This may take a minute.");
     
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/jobs/fetch-all`);
+      // Add a timestamp to bypass aggressive browser caching (prevents 304 Not Modified)
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/jobs/fetch-all?t=${Date.now()}`, {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json',
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache'
+        },
+        body: JSON.stringify({
+          email: session.user.email,
+          name: session.user.name || "User"
+        })
+      });
       if (!res.ok) throw new Error("Failed to fetch jobs");
       
       const data = await res.json();
@@ -117,12 +141,14 @@ export default function ResumeUpload({ onJobsFetched, isFetching, setIsFetching 
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
         >
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            onChange={handleFileChange} 
-            accept=".pdf,.doc,.docx" 
-            className="hidden" 
+          <input
+            type="file"
+            className="hidden"
+            id="resume-upload"
+            accept=".pdf,.doc,.docx"
+            onChange={handleFileChange}
+            onClick={handleInputClick}
+            ref={fileInputRef}
           />
           
           {file ? (
