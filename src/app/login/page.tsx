@@ -29,7 +29,7 @@ export default function LoginPage() {
         toast.error(error.message || "Invalid credentials");
       } else {
         toast.success("Login successful!");
-        router.push("/dashboard");
+        window.location.href = "/dashboard";
       }
     } catch (err: any) {
       toast.error("Something went wrong");
@@ -40,9 +40,12 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-black flex flex-col justify-center items-center p-4">
-      <Link href="/" className="mb-8 flex items-center space-x-2">
-        <span className="font-bold text-cyan-500 text-3xl">⚡</span>
-        <span className="font-bold text-white text-3xl">HireXplore</span>
+      <Link href="/" className="mb-8 flex items-center justify-center transition-transform duration-300 hover:scale-[1.03]">
+        <img 
+          src="/HireXplore.png" 
+          alt="HireXplore Logo" 
+          className="h-12 md:h-16 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,215,0,0.4)]"
+        />
       </Link>
 
       <div className="w-full max-w-md bg-[#111] border border-gray-800 rounded-2xl p-8 shadow-2xl">
@@ -66,7 +69,7 @@ export default function LoginPage() {
           <div className="space-y-2">
             <div className="flex justify-between items-center">
               <Label htmlFor="password">Password</Label>
-              <Link href="#" className="text-xs text-cyan-500 hover:underline">
+              <Link href="/forgot-password" className="text-xs text-cyan-500 hover:underline">
                 Forgot password?
               </Link>
             </div>

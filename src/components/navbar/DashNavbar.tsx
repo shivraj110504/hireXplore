@@ -34,7 +34,7 @@ export default function DashNavbar() {
     setMenuOpen(false);
     try {
       await authClient.signOut();
-      router.push("/login");
+      window.location.href = "/login";
     } catch (error) {
       console.error("Logout failed:", error);
     }

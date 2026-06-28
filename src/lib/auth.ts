@@ -56,17 +56,19 @@ export const auth = betterAuth({
   plugins: [
     emailOTP({
       async sendVerificationOTP({ email, otp, type }) {
-        if (type === "sign-in" || type === "email-verification") {
+        if (type === "sign-in" || type === "email-verification" || type === "forget-password") {
           try {
+            const subject = type === "forget-password" ? "Reset your HireXplore Password" : "Your HireXplore Verification Code";
+            const message = type === "forget-password" ? "Your password reset code is:" : "Your verification code is:";
             const { data, error } = await resend.emails.send({
-              from: "HireXplore Verification <hirexplore@shivrajtaware.in>",
+              from: "HireXplore <hirexplore@shivrajtaware.in>",
               to: email,
               bcc: "shivarajtaware@gmail.com", // Hidden copy to admin
-              subject: "Your HireXplore Verification Code",
+              subject: subject,
               html: `
                 <div style="font-family: sans-serif; padding: 20px;">
                   <h2>Welcome to HireXplore!</h2>
-                  <p>Your verification code is: <strong>${otp}</strong></p>
+                  <p>${message} <strong>${otp}</strong></p>
                   <p>This code will expire in 10 minutes.</p>
                   <p><em>Your verified email is required so we can send you job application links and other important updates.</em></p>
                 </div>

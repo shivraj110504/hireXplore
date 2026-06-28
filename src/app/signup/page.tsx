@@ -138,7 +138,7 @@ const SignupPage = () => {
       }
 
       console.log("Email verified successfully");
-      router.push("/dashboard");
+      window.location.href = "/dashboard";
 
     } catch (err) {
       console.error("OTP verification error:", err);
@@ -180,7 +180,14 @@ const SignupPage = () => {
   // ============================================
   if (step === "verify") {
     return (
-      <div className="flex items-center justify-center p-4 min-h-screen bg-black transition-colors duration-300 relative">
+      <div className="flex flex-col items-center justify-center p-4 min-h-screen bg-black transition-colors duration-300 relative">
+        <a href="/" className="mb-8 flex items-center justify-center transition-transform duration-300 hover:scale-[1.03]">
+          <img 
+            src="/HireXplore.png" 
+            alt="HireXplore Logo" 
+            className="h-12 md:h-16 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,215,0,0.4)]"
+          />
+        </a>
         <div className="shadow-input mx-auto w-full max-w-md rounded-2xl p-6 bg-[#171717] transition-colors duration-300">
           <h2 className="text-xl font-bold text-white">Verify Your Email</h2>
           <p className="mt-2 text-sm text-gray-300">
@@ -242,7 +249,14 @@ const SignupPage = () => {
   // RENDER: SIGNUP FORM
   // ============================================
   return (
-    <div className="flex items-center justify-center p-4 min-h-screen bg-black transition-colors duration-300 relative">
+    <div className="flex flex-col items-center justify-center p-4 min-h-screen bg-black transition-colors duration-300 relative">
+      <a href="/" className="mb-8 flex items-center justify-center transition-transform duration-300 hover:scale-[1.03]">
+        <img 
+          src="/HireXplore.png" 
+          alt="HireXplore Logo" 
+          className="h-12 md:h-16 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,215,0,0.4)]"
+        />
+      </a>
       <div className="shadow-input mx-auto w-full max-w-md rounded-2xl p-5 bg-[#171717] transition-colors duration-300">
         <h2 className="text-lg font-bold text-white text-center">Welcome to HireXplore</h2>
         <p className="mt-1 text-sm text-gray-300 text-center">Create your account to get started</p>

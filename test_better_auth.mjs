@@ -1,0 +1,1 @@
+﻿import { createAuthClient } from 'better-auth/react'; import { emailOTPClient } from 'better-auth/client/plugins'; const authClient = createAuthClient({ plugins: [emailOTPClient()] }); console.log(Object.keys(authClient.emailOtp)); console.log(Object.keys(authClient));
