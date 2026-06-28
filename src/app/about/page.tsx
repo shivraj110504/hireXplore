@@ -5,8 +5,7 @@ import Navbar from "@/components/navbar/Navbar";
 import Footer from "@/components/footer/Footer";
 import { SparklesCore } from "@/components/ui/sparkles";
 import { MagicCard } from "@/components/magicui/magic-card";
-import { FaRobot, FaSearch, FaBolt, FaGlobe } from "react-icons/flex";
-import { FaUserShield, FaRocket, FaHandshake, FaChartLine } from "react-icons/fa";
+import { FaRobot, FaSearch, FaBolt, FaGlobe, FaUserShield, FaRocket, FaHandshake, FaChartLine } from "react-icons/fa";
 
 export default function AboutPage() {
   return (
