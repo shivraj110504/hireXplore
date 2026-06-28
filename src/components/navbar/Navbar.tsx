@@ -21,7 +21,7 @@ export default function PublicNavbar() {
   const navItems = [
     { name: "Home", link: "/" },
     { name: "Features", link: "/#features" },
-    { name: "Dashboard", link: "/dashboard" },
+    { name: "About", link: "/about" },
   ];
 
   return (
@@ -52,14 +52,14 @@ export default function PublicNavbar() {
 
         <MobileNavMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)}>
           {navItems.map((item, index) => (
-            <a
+            <Link
               key={index}
               href={item.link}
               className="text-lg font-medium text-neutral-200"
               onClick={() => setMenuOpen(false)}
             >
               {item.name}
-            </a>
+            </Link>
           ))}
           <div className="mt-4 flex flex-col gap-2">
             <Link href="/login" onClick={() => setMenuOpen(false)}>

@@ -105,8 +105,8 @@ export default function FooterComponent() {
           ) : (
             <div className="flex flex-col gap-4 lg:ml-auto">
               <h3 className="text-lg font-bold text-white tracking-wide">Account</h3>
-              <Link href="/dashboard" className="text-gray-400 hover:text-cyan-400 text-sm transition-colors">
-                Go to Dashboard →
+              <Link href="/profile" className="text-gray-400 hover:text-cyan-400 text-sm transition-colors">
+                Go to Profile →
               </Link>
             </div>
           )}
@@ -117,7 +117,7 @@ export default function FooterComponent() {
             &copy; {new Date().getFullYear()} HireXplore. All rights reserved.
           </p>
           <p className="text-gray-600 text-xs text-center md:text-right">
-            Designed with ♥ for developers.
+            Engineered for Engineers by an Engineer.
           </p>
         </div>
       </div>

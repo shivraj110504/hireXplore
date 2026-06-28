@@ -24,9 +24,10 @@ export default function DashNavbar() {
   const router = useRouter();
 
   const navItems = [
-    { name: "Dashboard", link: "/dashboard" },
+    { name: "Home", link: "/" },
     { name: "Search Job", link: "/findJobs" },
     { name: "Saved Jobs", link: "/savedJobs" },
+    { name: "About", link: "/about" },
   ];
 
   const handleLogout = async () => {
@@ -96,14 +97,14 @@ export default function DashNavbar() {
 
         <MobileNavMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)}>
           {navItems.map((item, index) => (
-            <a
+            <Link
               key={index}
               href={item.link}
               className="text-lg font-medium text-neutral-200"
               onClick={() => setMenuOpen(false)}
             >
               {item.name}
-            </a>
+            </Link>
           ))}
 
           <div className="mt-4 border-t border-gray-700 pt-2">

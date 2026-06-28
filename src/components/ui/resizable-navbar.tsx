@@ -9,6 +9,7 @@ import {
 } from "motion/react";
 
 import React, { useRef, useState } from "react";
+import Link from "next/link";
 
 interface NavbarProps {
   children: React.ReactNode;
@@ -133,7 +134,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
             onMouseEnter={() => setHovered(idx)}
             onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
           >
-            <a
+            <Link
               onClick={onItemClick}
               className="relative px-4 py-2 text-white hover:text-gray-300 cursor-pointer"
               href={item.link || "#"}
@@ -145,7 +146,7 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
                 />
               )}
               <span className="relative z-20">{item.name}</span>
-            </a>
+            </Link>
 
             {hasSubmenu && (hovered === idx || openIndex === idx) && (
               <motion.div
@@ -155,14 +156,14 @@ export const NavItems = ({ items, className, onItemClick }: NavItemsProps) => {
                 className="absolute top-full left-0 mt-2 w-40 rounded-md bg-black text-white shadow-lg z-50"
               >
                 {item.submenu?.map((subItem, subIdx) => (
-                  <a
+                  <Link
                     key={subIdx}
                     href={subItem.link}
                     className="block px-4 py-2 hover:bg-gray-800"
                     onClick={onItemClick}
                   >
                     {subItem.name}
-                  </a>
+                  </Link>
                 ))}
               </motion.div>
             )}
