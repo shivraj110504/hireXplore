@@ -83,18 +83,19 @@ export default function ResumeUpload({ onJobsFetched, isFetching, setIsFetching 
     toast.info("Scraping live jobs and matching with your profile... This may take a minute.");
     
     try {
+      const formData = new FormData();
+      formData.append('resume', file);
+      formData.append('email', session.user.email);
+      formData.append('name', session.user.name || "User");
+
       // Add a timestamp to bypass aggressive browser caching (prevents 304 Not Modified)
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/jobs/fetch-all?t=${Date.now()}`, {
         method: "POST",
         headers: {
-          'Content-Type': 'application/json',
           'Cache-Control': 'no-cache, no-store, must-revalidate',
           'Pragma': 'no-cache'
         },
-        body: JSON.stringify({
-          email: session.user.email,
-          name: session.user.name || "User"
-        })
+        body: formData
       });
       if (!res.ok) throw new Error("Failed to fetch jobs");
       
