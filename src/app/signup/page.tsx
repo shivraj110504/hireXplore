@@ -180,7 +180,7 @@ const SignupPage = () => {
   // ============================================
   if (step === "verify") {
     return (
-      <div className="flex flex-col items-center justify-center p-4 min-h-screen bg-black transition-colors duration-300 relative">
+      <div className="flex flex-col items-center justify-center p-4 min-h-screen bg-bg-main transition-colors duration-300 relative">
         <a href="/" className="mb-8 flex items-center justify-center transition-transform duration-300 hover:scale-[1.03]">
           <img 
             src="/HireXplore.png" 
@@ -188,18 +188,18 @@ const SignupPage = () => {
             className="h-12 md:h-16 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,215,0,0.4)]"
           />
         </a>
-        <div className="shadow-input mx-auto w-full max-w-md rounded-2xl p-6 bg-[#171717] transition-colors duration-300">
-          <h2 className="text-xl font-bold text-white">Verify Your Email</h2>
-          <p className="mt-2 text-sm text-gray-300">
+        <div className="shadow-input mx-auto w-full max-w-md rounded-2xl p-6 bg-bg-card transition-colors duration-300">
+          <h2 className="text-xl font-bold text-text-primary">Verify Your Email</h2>
+          <p className="mt-2 text-sm text-text-secondary">
             We sent a 6-digit code to{" "}
-            <span className="text-cyan-500">{formData.email}</span>
+            <span className="text-brand-primary">{formData.email}</span>
           </p>
 
           {error && <ErrorBox message={error} />}
 
           <form className="mt-6" onSubmit={handleVerifyOTP}>
             <LabelInputContainer className="mb-5">
-              <Label htmlFor="otp" className="text-white">Enter OTP</Label>
+              <Label htmlFor="otp" className="text-text-primary">Enter OTP</Label>
               <Input
                 id="otp"
                 placeholder="123456"
@@ -208,7 +208,7 @@ const SignupPage = () => {
                 value={otp}
                 onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
                 required
-                className="text-center text-2xl tracking-widest placeholder-gray-400 border rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 bg-black border-[#3A3A3A] text-white"
+                className="text-center text-2xl tracking-widest placeholder-gray-400 border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary bg-bg-main border-border-default text-text-primary"
               />
             </LabelInputContainer>
 
@@ -216,7 +216,7 @@ const SignupPage = () => {
               <button
                 type="submit"
                 disabled={loading || otp.length !== 6}
-                className="group/btn relative h-10 w-44 rounded-md bg-cyan-600 text-white font-medium shadow-[0px_1px_0px_0px_#00000040_inset,0px_-1px_0px_0px_#00000040_inset] transition duration-300 hover:bg-cyan-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="group/btn relative h-10 w-44 rounded-md bg-brand-primary text-text-primary font-medium shadow-[0px_1px_0px_0px_#00000040_inset,0px_-1px_0px_0px_#00000040_inset] transition duration-300 hover:bg-brand-primary-hover disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? "Verifying..." : "Verify Email →"}
                 <BottomGradient />
@@ -226,7 +226,7 @@ const SignupPage = () => {
                 type="button"
                 onClick={handleResendOTP}
                 disabled={loading}
-                className="text-sm text-cyan-500 hover:underline disabled:opacity-50"
+                className="text-sm text-brand-primary hover:underline disabled:opacity-50"
               >
                 Did not receive code? Resend OTP
               </button>
@@ -234,7 +234,7 @@ const SignupPage = () => {
               <button
                 type="button"
                 onClick={() => setStep("signup")}
-                className="text-sm text-gray-400 hover:text-white"
+                className="text-sm text-text-muted hover:text-text-primary"
               >
                 ← Back to signup
               </button>
@@ -249,7 +249,7 @@ const SignupPage = () => {
   // RENDER: SIGNUP FORM
   // ============================================
   return (
-    <div className="flex flex-col items-center justify-center p-4 min-h-screen bg-black transition-colors duration-300 relative">
+    <div className="flex flex-col items-center justify-center p-4 min-h-screen bg-bg-main transition-colors duration-300 relative">
       <a href="/" className="mb-8 flex items-center justify-center transition-transform duration-300 hover:scale-[1.03]">
         <img 
           src="/HireXplore.png" 
@@ -257,9 +257,9 @@ const SignupPage = () => {
           className="h-12 md:h-16 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,215,0,0.4)]"
         />
       </a>
-      <div className="shadow-input mx-auto w-full max-w-md rounded-2xl p-5 bg-[#171717] transition-colors duration-300">
-        <h2 className="text-lg font-bold text-white text-center">Welcome to HireXplore</h2>
-        <p className="mt-1 text-sm text-gray-300 text-center">Create your account to get started</p>
+      <div className="shadow-input mx-auto w-full max-w-md rounded-2xl p-5 bg-bg-card transition-colors duration-300">
+        <h2 className="text-lg font-bold text-text-primary text-center">Welcome to HireXplore</h2>
+        <p className="mt-1 text-sm text-text-secondary text-center">Create your account to get started</p>
 
         {error && <ErrorBox message={error} />}
 
@@ -270,10 +270,10 @@ const SignupPage = () => {
             type="button"
             onClick={handleGoogleSignUp}
             disabled={socialLoading === "google"}
-            className="group/btn shadow-input relative flex h-11 w-full items-center justify-center space-x-2 rounded-md bg-gray-900 px-4 font-medium text-white hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="group/btn shadow-input relative flex h-11 w-full items-center justify-center space-x-2 rounded-md bg-bg-card-elevated px-4 font-medium text-text-primary hover:bg-bg-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <IconBrandGoogle className="h-5 w-5 text-white" />
-            <span className="text-sm text-white">
+            <IconBrandGoogle className="h-5 w-5 text-text-primary" />
+            <span className="text-sm text-text-primary">
               {socialLoading === "google" ? "Connecting..." : "Continue with Google"}
             </span>
             <BottomGradient />
@@ -285,10 +285,10 @@ const SignupPage = () => {
             type="button"
             onClick={handleGitHubSignUp}
             disabled={socialLoading === "github"}
-            className="group/btn shadow-input relative flex h-11 w-full items-center justify-center space-x-2 rounded-md bg-gray-900 px-4 font-medium text-white hover:bg-gray-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            className="group/btn shadow-input relative flex h-11 w-full items-center justify-center space-x-2 rounded-md bg-bg-card-elevated px-4 font-medium text-text-primary hover:bg-bg-hover transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            <IconBrandGithub className="h-5 w-5 text-white" />
-            <span className="text-sm text-white">
+            <IconBrandGithub className="h-5 w-5 text-text-primary" />
+            <span className="text-sm text-text-primary">
               {socialLoading === "github" ? "Connecting..." : "Continue with GitHub"}
             </span>
             <BottomGradient />
@@ -296,23 +296,23 @@ const SignupPage = () => {
 
           {/* Divider */}
           <div className="flex items-center py-1">
-            <div className="h-[1px] flex-1 bg-gray-700" />
-            <span className="px-3 text-xs text-gray-500">or</span>
-            <div className="h-[1px] flex-1 bg-gray-700" />
+            <div className="h-[1px] flex-1 bg-bg-hover" />
+            <span className="px-3 text-xs text-text-disabled">or</span>
+            <div className="h-[1px] flex-1 bg-bg-hover" />
           </div>
 
           {/* Email Option - Expandable */}
           <button
             type="button"
             onClick={() => setShowEmailForm(!showEmailForm)}
-            className="group/btn shadow-input relative flex h-11 w-full items-center justify-center space-x-2 rounded-md bg-transparent border border-gray-700 px-4 font-medium text-white hover:bg-gray-900/50 transition-colors"
+            className="group/btn shadow-input relative flex h-11 w-full items-center justify-center space-x-2 rounded-md bg-transparent border border-border-default px-4 font-medium text-text-primary hover:bg-bg-card-elevated/50 transition-colors"
           >
-            <IconMail className="h-5 w-5 text-white" />
-            <span className="text-sm text-white">Continue with Email</span>
+            <IconMail className="h-5 w-5 text-text-primary" />
+            <span className="text-sm text-text-primary">Continue with Email</span>
             {showEmailForm ? (
-              <IconChevronUp className="h-4 w-4 text-gray-400 ml-auto" />
+              <IconChevronUp className="h-4 w-4 text-text-muted ml-auto" />
             ) : (
-              <IconChevronDown className="h-4 w-4 text-gray-400 ml-auto" />
+              <IconChevronDown className="h-4 w-4 text-text-muted ml-auto" />
             )}
           </button>
 
@@ -325,7 +325,7 @@ const SignupPage = () => {
               {/* First & Last Name - Side by Side */}
               <div className="flex space-x-2">
                 <LabelInputContainer>
-                  <Label htmlFor="firstName" className="text-white text-xs">First name</Label>
+                  <Label htmlFor="firstName" className="text-text-primary text-xs">First name</Label>
                   <Input
                     id="firstName"
                     placeholder="John"
@@ -333,12 +333,12 @@ const SignupPage = () => {
                     value={formData.firstName}
                     onChange={handleChange}
                     required={showEmailForm}
-                    className="text-white placeholder-gray-400 border rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 h-9 text-sm bg-[#111] border-[#3A3A3A]"
+                    className="text-text-primary placeholder-gray-400 border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary h-9 text-sm bg-bg-card border-border-default"
                   />
                 </LabelInputContainer>
 
                 <LabelInputContainer>
-                  <Label htmlFor="lastName" className="text-white text-xs">Last name</Label>
+                  <Label htmlFor="lastName" className="text-text-primary text-xs">Last name</Label>
                   <Input
                     id="lastName"
                     placeholder="Doe"
@@ -346,14 +346,14 @@ const SignupPage = () => {
                     value={formData.lastName}
                     onChange={handleChange}
                     required={showEmailForm}
-                    className="text-white placeholder-gray-400 border rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 h-9 text-sm bg-[#111] border-[#3A3A3A]"
+                    className="text-text-primary placeholder-gray-400 border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary h-9 text-sm bg-bg-card border-border-default"
                   />
                 </LabelInputContainer>
               </div>
 
               {/* Email */}
               <LabelInputContainer>
-                <Label htmlFor="email" className="text-white text-xs">Email Address</Label>
+                <Label htmlFor="email" className="text-text-primary text-xs">Email Address</Label>
                 <Input
                   id="email"
                   placeholder="m@example.com"
@@ -361,14 +361,14 @@ const SignupPage = () => {
                   value={formData.email}
                   onChange={handleChange}
                   required={showEmailForm}
-                  className="text-white placeholder-gray-400 border rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 h-9 text-sm bg-[#111] border-[#3A3A3A]"
+                  className="text-text-primary placeholder-gray-400 border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary h-9 text-sm bg-bg-card border-border-default"
                 />
               </LabelInputContainer>
 
               {/* Password & Confirm - Side by Side */}
               <div className="flex space-x-2">
                 <LabelInputContainer>
-                  <Label htmlFor="password" className="text-white text-xs">Password</Label>
+                  <Label htmlFor="password" className="text-text-primary text-xs">Password</Label>
                   <Input
                     id="password"
                     placeholder="••••••••"
@@ -376,12 +376,12 @@ const SignupPage = () => {
                     value={formData.password}
                     onChange={handleChange}
                     required={showEmailForm}
-                    className="text-white placeholder-gray-400 border rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 h-9 text-sm bg-[#111] border-[#3A3A3A]"
+                    className="text-text-primary placeholder-gray-400 border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary h-9 text-sm bg-bg-card border-border-default"
                   />
                 </LabelInputContainer>
 
                 <LabelInputContainer>
-                  <Label htmlFor="confirmPassword" className="text-white text-xs">Confirm</Label>
+                  <Label htmlFor="confirmPassword" className="text-text-primary text-xs">Confirm</Label>
                   <Input
                     id="confirmPassword"
                     placeholder="••••••••"
@@ -389,7 +389,7 @@ const SignupPage = () => {
                     value={formData.confirmPassword}
                     onChange={handleChange}
                     required={showEmailForm}
-                    className="text-white placeholder-gray-400 border rounded-md focus:outline-none focus:ring-2 focus:ring-cyan-500 h-9 text-sm bg-[#111] border-[#3A3A3A]"
+                    className="text-text-primary placeholder-gray-400 border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary h-9 text-sm bg-bg-card border-border-default"
                   />
                 </LabelInputContainer>
               </div>
@@ -397,7 +397,7 @@ const SignupPage = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="group/btn relative h-9 w-full rounded-md bg-white text-black hover:bg-gray-200 text-sm font-bold shadow-[0px_1px_0px_0px_#00000040_inset,0px_-1px_0px_0px_#00000040_inset] transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed mt-1"
+                className="group/btn relative h-9 w-full rounded-md bg-brand-primary text-text-primary hover:bg-brand-primary text-sm font-bold shadow-[0px_1px_0px_0px_#00000040_inset,0px_-1px_0px_0px_#00000040_inset] transition duration-300 disabled:opacity-50 disabled:cursor-not-allowed mt-1"
               >
                 {loading ? "Signing up..." : "Sign up with Email →"}
                 <BottomGradient />
@@ -405,9 +405,9 @@ const SignupPage = () => {
             </form>
           </div>
 
-          <p className="text-sm text-gray-400 text-center pt-2">
+          <p className="text-sm text-text-muted text-center pt-2">
             Already have an account?{" "}
-            <a href="/login" className="text-cyan-500 hover:underline">Login</a>
+            <a href="/login" className="text-brand-primary hover:underline">Login</a>
           </p>
         </div>
       </div>
@@ -420,8 +420,8 @@ const SignupPage = () => {
 // ============================================
 const BottomGradient = () => (
   <>
-    <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
-    <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
+    <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-brand-accent to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
+    <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-brand-accent to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
   </>
 );
 
@@ -436,8 +436,8 @@ const LabelInputContainer = ({
 );
 
 const ErrorBox = ({ message }: { message: string }) => (
-  <div className="mt-3 p-2 rounded-md bg-red-900/30 border border-red-800">
-    <p className="text-sm text-red-400 text-center">{message}</p>
+  <div className="mt-3 p-2 rounded-md bg-status-error/20 border border-status-error">
+    <p className="text-sm text-status-error text-center">{message}</p>
   </div>
 );
 

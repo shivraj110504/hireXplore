@@ -31,8 +31,8 @@ export const NeonGradientCard: React.FC<NeonGradientCardProps> = ({
   borderSize = 1,
   borderRadius = 20,
   neonColors = {
-    firstColor: "#ff00aa",
-    secondColor: "#00FFF1",
+    firstColor: "#4F46E5",
+    secondColor: "#8B5CF6",
   },
   ...props
 }) => {
@@ -88,7 +88,7 @@ export const NeonGradientCard: React.FC<NeonGradientCardProps> = ({
     >
       <div
         className={cn(
-          "relative size-full min-h-[inherit] rounded-[var(--card-content-radius)] bg-gray-100 p-6",
+          "relative size-full min-h-[inherit] rounded-[var(--card-content-radius)] bg-bg-card p-6",
           "before:absolute before:-top-[var(--border-size)] before:-left-[var(--border-size)] before:-z-10 before:block",
           "before:h-[var(--pseudo-element-height)] before:w-[var(--pseudo-element-width)] before:rounded-[var(--border-radius)] before:content-['']",
           "before:bg-[linear-gradient(0deg,var(--neon-first-color),var(--neon-second-color))] before:bg-[length:100%_200%]",
@@ -97,7 +97,6 @@ export const NeonGradientCard: React.FC<NeonGradientCardProps> = ({
           "after:h-[var(--pseudo-element-height)] after:w-[var(--pseudo-element-width)] after:rounded-[var(--border-radius)] after:blur-[var(--after-blur)] after:content-['']",
           "after:bg-[linear-gradient(0deg,var(--neon-first-color),var(--neon-second-color))] after:bg-[length:100%_200%] after:opacity-80",
           "after:animate-background-position-spin",
-          "dark:bg-neutral-900",
           "break-words"
         )}
       >

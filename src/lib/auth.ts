@@ -21,6 +21,12 @@ export const auth = betterAuth({
   database: mongodbAdapter(db, {
     client,
   }),
+  trustedOrigins: [
+    "https://hirexplore.shivrajtaware.in",
+    "https://hire-xplore.vercel.app",
+    "http://localhost:3000",
+    process.env.NEXT_PUBLIC_APP_URL || ""
+  ].filter(Boolean),
   emailAndPassword: {
     enabled: true,
   },

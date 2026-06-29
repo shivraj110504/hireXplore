@@ -36,7 +36,7 @@ export async function middleware(request: NextRequest) {
   }
 
   // Redirect if logged in
-  if (pathname === "/login" || pathname === "/signup") {
+  if (pathname === "/" || pathname === "/login" || pathname === "/signup") {
     if (session) {
       if (!session.user.emailVerified) {
         return NextResponse.redirect(new URL("/verify-email", request.url));
@@ -49,5 +49,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/profile/:path*", "/login", "/signup", "/verify-email"],
+  matcher: ["/", "/dashboard/:path*", "/profile/:path*", "/login", "/signup", "/verify-email"],
 };

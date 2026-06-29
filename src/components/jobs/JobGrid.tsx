@@ -44,7 +44,7 @@ export default function JobGrid({
 
   if (jobs.length === 0) {
     return (
-      <div className="text-center py-12 text-gray-400">
+      <div className="text-center py-12 text-text-muted">
         No jobs found. {isProfileView ? "You haven't saved any jobs yet." : "Please upload your resume to see matches."}
       </div>
     );
@@ -52,16 +52,16 @@ export default function JobGrid({
 
   return (
     <div className="w-full">
-      <div className="flex flex-col md:flex-row gap-4 mb-8 bg-[#111] p-4 rounded-xl border border-gray-800">
+      <div className="flex flex-col md:flex-row gap-4 mb-8 bg-bg-card p-4 rounded-xl border border-border-default">
         <input
           type="text"
           placeholder="Filter by title, company..."
-          className="flex-grow bg-black border border-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-cyan-500"
+          className="flex-grow bg-bg-main border border-border-default text-text-primary px-4 py-2 rounded-lg focus:outline-none focus:border-border-focus"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
         <select
-          className="bg-black border border-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-cyan-500"
+          className="bg-bg-main border border-border-default text-text-primary px-4 py-2 rounded-lg focus:outline-none focus:border-border-focus"
           value={sourceFilter}
           onChange={(e) => setSourceFilter(e.target.value)}
         >
@@ -69,7 +69,7 @@ export default function JobGrid({
           {sources.map(src => <option key={src} value={src}>{src}</option>)}
         </select>
         <select
-          className="bg-black border border-gray-700 text-white px-4 py-2 rounded-lg focus:outline-none focus:border-cyan-500"
+          className="bg-bg-main border border-border-default text-text-primary px-4 py-2 rounded-lg focus:outline-none focus:border-border-focus"
           value={minScore}
           onChange={(e) => setMinScore(Number(e.target.value))}
         >
@@ -80,7 +80,7 @@ export default function JobGrid({
         </select>
       </div>
 
-      <div className="mb-4 text-gray-400">
+      <div className="mb-4 text-text-muted">
         Showing {filteredJobs.length} of {jobs.length} matched jobs
       </div>
 
@@ -96,7 +96,7 @@ export default function JobGrid({
       </div>
 
       {filteredJobs.length === 0 && (
-        <div className="text-center py-12 text-gray-400">
+        <div className="text-center py-12 text-text-muted">
           No jobs match your current filters.
         </div>
       )}

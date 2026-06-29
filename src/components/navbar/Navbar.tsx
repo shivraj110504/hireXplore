@@ -25,7 +25,7 @@ export default function PublicNavbar() {
   ];
 
   return (
-    <Navbar className="fixed top-0 left-0 w-full z-50 bg-black">
+    <Navbar className="fixed top-0 left-0 w-full z-50 bg-bg-main">
       <NavBody>
         <NavbarLogo />
         <NavItems items={navItems} />
@@ -55,7 +55,7 @@ export default function PublicNavbar() {
             <Link
               key={index}
               href={item.link}
-              className="text-lg font-medium text-neutral-200"
+              className="text-lg font-medium text-text-secondary"
               onClick={() => setMenuOpen(false)}
             >
               {item.name}

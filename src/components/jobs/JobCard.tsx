@@ -25,9 +25,9 @@ export default function JobCard({ job, isProfileView = false, onRemove }: JobCar
   const [isSaving, setIsSaving] = useState(false);
 
   const scoreColor =
-    job.matchScore >= 80 ? "text-green-400 border-green-400" :
-    job.matchScore >= 60 ? "text-yellow-400 border-yellow-400" :
-    "text-red-400 border-red-400";
+    job.matchScore >= 80 ? "text-status-success border-status-success" :
+    job.matchScore >= 60 ? "text-status-warning border-status-warning" :
+    "text-status-error border-status-error";
 
   const handleSave = async () => {
     if (isSaved || isSaving) return;
@@ -63,17 +63,36 @@ export default function JobCard({ job, isProfileView = false, onRemove }: JobCar
     }
   };
 
+  // By hook or by crook: If the scraper didn't provide a direct link or provided a search page,
+  // we use DuckDuckGo's "I'm Feeling Ducky" (!ducky) to instantly redirect the user to the 
+  // exact direct job description for that title and company on that specific platform!
+  let finalApplyLink = job.applyLink;
+  const sourceLower = job.source.toLowerCase();
+  
+  if (finalApplyLink === '#' || finalApplyLink.includes('/jobs?q=') || finalApplyLink.includes('Job/jobs.htm') || finalApplyLink.includes('apna.co/jobs?search')) {
+    const query = `!ducky ${job.title} ${job.company} site:${sourceLower}.com`;
+    finalApplyLink = `https://duckduckgo.com/?q=${encodeURIComponent(query)}`;
+  } else if (!finalApplyLink.startsWith('http')) {
+    if (sourceLower === 'linkedin') {
+      finalApplyLink = `https://www.linkedin.com${finalApplyLink.startsWith('/') ? '' : '/'}${finalApplyLink}`;
+    } else {
+      finalApplyLink = `https://${finalApplyLink}`;
+    }
+  }
+
+  const finalHref = finalApplyLink;
+
   return (
     <MagicCard
-      className="w-full h-full flex-col p-6 shadow-2xl transition-transform hover:scale-[1.02] bg-[#111]"
+      className="w-full h-full flex-col p-6 shadow-2xl transition-transform hover:scale-[1.02] bg-bg-card"
       gradientColor="#1e293b"
     >
       <div className="flex flex-col h-full z-10 relative">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h3 className="text-xl font-semibold text-cyan-400 mb-1">{job.title}</h3>
-            <p className="text-gray-300 font-medium">{job.company}</p>
-            <p className="text-gray-400 text-sm mt-1">📍 {job.location}</p>
+            <h3 className="text-xl font-semibold text-brand-primary mb-1">{job.title}</h3>
+            <p className="text-text-secondary font-medium">{job.company}</p>
+            <p className="text-text-muted text-sm mt-1">📍 {job.location}</p>
           </div>
           <div className={`px-3 py-1 rounded-full border ${scoreColor} font-bold text-sm whitespace-nowrap`}>
             {job.matchScore}% Match
@@ -82,38 +101,38 @@ export default function JobCard({ job, isProfileView = false, onRemove }: JobCar
 
         <div className="mt-4 flex-grow">
           <div className="mb-3">
-            <p className="text-xs text-gray-400 mb-2">MATCHED SKILLS</p>
+            <p className="text-xs text-text-muted mb-2">MATCHED SKILLS</p>
             <div className="flex flex-wrap gap-2">
               {job.matchedSkills.length > 0 ? (
                 job.matchedSkills.map((skill, idx) => (
-                  <span key={idx} className="bg-green-900/30 text-green-400 border border-green-800 px-2 py-1 rounded text-xs">
+                  <span key={idx} className="bg-status-success/20 text-status-success border border-status-success px-2 py-1 rounded text-xs">
                     {skill}
                   </span>
                 ))
               ) : (
-                <span className="text-gray-500 text-xs">None</span>
+                <span className="text-text-disabled text-xs">None</span>
               )}
             </div>
           </div>
           
           <div>
-            <p className="text-xs text-gray-400 mb-2">MISSING SKILLS</p>
+            <p className="text-xs text-text-muted mb-2">MISSING SKILLS</p>
             <div className="flex flex-wrap gap-2">
               {job.missingSkills.length > 0 ? (
                 job.missingSkills.map((skill, idx) => (
-                  <span key={idx} className="bg-red-900/30 text-red-400 border border-red-800 px-2 py-1 rounded text-xs">
+                  <span key={idx} className="bg-status-error/20 text-status-error border border-status-error px-2 py-1 rounded text-xs">
                     {skill}
                   </span>
                 ))
               ) : (
-                <span className="text-gray-500 text-xs">None</span>
+                <span className="text-text-disabled text-xs">None</span>
               )}
             </div>
           </div>
         </div>
 
-        <div className="mt-6 flex flex-wrap justify-between items-center border-t border-gray-800 pt-4 gap-4">
-          <span className="text-xs bg-gray-800 text-gray-300 px-2 py-1 rounded whitespace-nowrap">
+        <div className="mt-6 flex flex-wrap justify-between items-center border-t border-border-default pt-4 gap-4">
+          <span className="text-xs bg-bg-hover text-text-secondary px-2 py-1 rounded whitespace-nowrap">
             {job.source}
           </span>
           <div className="flex flex-wrap gap-2">
@@ -121,7 +140,7 @@ export default function JobCard({ job, isProfileView = false, onRemove }: JobCar
               <button
                 onClick={handleRemove}
                 disabled={isSaving}
-                className="px-3 py-2 bg-red-900/50 hover:bg-red-900/80 text-red-400 border border-red-800 rounded-md text-sm font-semibold transition-colors disabled:opacity-50"
+                className="px-3 py-2 bg-status-error/20 hover:bg-status-error/40 text-status-error border border-status-error/50 rounded-md text-sm font-semibold transition-colors disabled:opacity-50"
               >
                 {isSaving ? "Removing..." : "Remove"}
               </button>
@@ -131,18 +150,19 @@ export default function JobCard({ job, isProfileView = false, onRemove }: JobCar
                 disabled={isSaved || isSaving}
                 className={`px-3 py-2 rounded-md text-sm font-semibold transition-colors border ${
                   isSaved 
-                    ? "bg-gray-800 text-gray-400 border-gray-700 cursor-not-allowed" 
-                    : "bg-gray-800 hover:bg-gray-700 text-white border-gray-700"
+                    ? "bg-bg-hover text-text-muted border-border-default cursor-not-allowed" 
+                    : "bg-bg-hover hover:bg-bg-hover text-text-primary border-border-default"
                 }`}
               >
                 {isSaving ? "..." : isSaved ? "Saved" : "Save Job"}
               </button>
             )}
+            
             <a
-              href={job.applyLink}
+              href={finalHref}
               target="_blank"
               rel="noopener noreferrer"
-              className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm font-semibold transition-colors"
+              className="px-4 py-2 bg-status-success/20 hover:bg-status-success/40 text-status-success border border-status-success/50 rounded-md text-sm font-semibold transition-colors"
             >
               Apply Now
             </a>

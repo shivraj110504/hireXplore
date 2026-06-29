@@ -129,7 +129,7 @@ export default function ForgotPasswordPage() {
   // RENDERS
   // ============================================
   return (
-    <div className="flex flex-col items-center justify-center p-4 min-h-screen bg-black transition-colors duration-300 relative">
+    <div className="flex flex-col items-center justify-center p-4 min-h-screen bg-bg-main transition-colors duration-300 relative">
       <a href="/" className="mb-8 flex items-center justify-center transition-transform duration-300 hover:scale-[1.03]">
         <img 
           src="/HireXplore.png" 
@@ -138,18 +138,18 @@ export default function ForgotPasswordPage() {
         />
       </a>
       
-      <div className="shadow-input mx-auto w-full max-w-md rounded-2xl p-6 bg-[#171717] transition-colors duration-300">
+      <div className="shadow-input mx-auto w-full max-w-md rounded-2xl p-6 bg-bg-card transition-colors duration-300">
         {error && <ErrorBox message={error} />}
 
         {step === "email" && (
           <>
-            <h2 className="text-xl font-bold text-white text-center">Reset your Password</h2>
-            <p className="mt-2 text-sm text-gray-400 text-center mb-6">
+            <h2 className="text-xl font-bold text-text-primary text-center">Reset your Password</h2>
+            <p className="mt-2 text-sm text-text-muted text-center mb-6">
               Enter your email address and we will send you a 6-digit verification code.
             </p>
             <form onSubmit={handleRequestOTP} className="space-y-4">
               <LabelInputContainer>
-                <Label htmlFor="email" className="text-white">Email Address</Label>
+                <Label htmlFor="email" className="text-text-primary">Email Address</Label>
                 <Input
                   id="email"
                   placeholder="m@example.com"
@@ -157,14 +157,14 @@ export default function ForgotPasswordPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="text-white placeholder-gray-500 bg-black border-[#3A3A3A] focus:ring-cyan-500"
+                  className="text-text-primary placeholder-gray-500 bg-bg-main border-border-default focus:ring-brand-primary"
                 />
               </LabelInputContainer>
               
               <button
                 type="submit"
                 disabled={loading || !email}
-                className="group/btn relative h-10 w-full rounded-md bg-cyan-600 text-white font-medium transition duration-300 hover:bg-cyan-700 disabled:opacity-50 mt-4"
+                className="group/btn relative h-10 w-full rounded-md bg-brand-primary text-text-primary font-medium transition duration-300 hover:bg-brand-primary-hover disabled:opacity-50 mt-4"
               >
                 {loading ? "Sending..." : "Send OTP"}
                 <BottomGradient />
@@ -175,13 +175,13 @@ export default function ForgotPasswordPage() {
 
         {step === "verify" && (
           <>
-            <h2 className="text-xl font-bold text-white text-center">Verify OTP</h2>
-            <p className="mt-2 text-sm text-gray-400 text-center mb-6">
-              We sent a 6-digit code to <span className="text-cyan-500">{email}</span>
+            <h2 className="text-xl font-bold text-text-primary text-center">Verify OTP</h2>
+            <p className="mt-2 text-sm text-text-muted text-center mb-6">
+              We sent a 6-digit code to <span className="text-brand-primary">{email}</span>
             </p>
             <form onSubmit={handleVerifyOTP} className="space-y-4">
               <LabelInputContainer>
-                <Label htmlFor="otp" className="text-white">Enter OTP</Label>
+                <Label htmlFor="otp" className="text-text-primary">Enter OTP</Label>
                 <Input
                   id="otp"
                   placeholder="123456"
@@ -190,14 +190,14 @@ export default function ForgotPasswordPage() {
                   value={otp}
                   onChange={(e) => setOtp(e.target.value.replace(/\D/g, ""))}
                   required
-                  className="text-center text-2xl tracking-widest placeholder-gray-500 bg-black border-[#3A3A3A] text-white focus:ring-cyan-500"
+                  className="text-center text-2xl tracking-widest placeholder-gray-500 bg-bg-main border-border-default text-text-primary focus:ring-brand-primary"
                 />
               </LabelInputContainer>
               
               <button
                 type="submit"
                 disabled={loading || otp.length !== 6}
-                className="group/btn relative h-10 w-full rounded-md bg-cyan-600 text-white font-medium transition duration-300 hover:bg-cyan-700 disabled:opacity-50 mt-4"
+                className="group/btn relative h-10 w-full rounded-md bg-brand-primary text-text-primary font-medium transition duration-300 hover:bg-brand-primary-hover disabled:opacity-50 mt-4"
               >
                 {loading ? "Verifying..." : "Verify"}
                 <BottomGradient />
@@ -208,13 +208,13 @@ export default function ForgotPasswordPage() {
 
         {step === "reset" && (
           <>
-            <h2 className="text-xl font-bold text-white text-center">Create New Password</h2>
-            <p className="mt-2 text-sm text-gray-400 text-center mb-6">
+            <h2 className="text-xl font-bold text-text-primary text-center">Create New Password</h2>
+            <p className="mt-2 text-sm text-text-muted text-center mb-6">
               Please enter a strong new password below.
             </p>
             <form onSubmit={handleResetPassword} className="space-y-4">
               <LabelInputContainer>
-                <Label htmlFor="password" className="text-white">New Password</Label>
+                <Label htmlFor="password" className="text-text-primary">New Password</Label>
                 <Input
                   id="password"
                   placeholder="••••••••"
@@ -222,12 +222,12 @@ export default function ForgotPasswordPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="text-white placeholder-gray-500 bg-black border-[#3A3A3A] focus:ring-cyan-500"
+                  className="text-text-primary placeholder-gray-500 bg-bg-main border-border-default focus:ring-brand-primary"
                 />
               </LabelInputContainer>
 
               <LabelInputContainer>
-                <Label htmlFor="confirmPassword" className="text-white">Confirm Password</Label>
+                <Label htmlFor="confirmPassword" className="text-text-primary">Confirm Password</Label>
                 <Input
                   id="confirmPassword"
                   placeholder="••••••••"
@@ -235,14 +235,14 @@ export default function ForgotPasswordPage() {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   required
-                  className="text-white placeholder-gray-500 bg-black border-[#3A3A3A] focus:ring-cyan-500"
+                  className="text-text-primary placeholder-gray-500 bg-bg-main border-border-default focus:ring-brand-primary"
                 />
               </LabelInputContainer>
               
               <button
                 type="submit"
                 disabled={loading || !password || !confirmPassword}
-                className="group/btn relative h-10 w-full rounded-md bg-cyan-600 text-white font-medium transition duration-300 hover:bg-cyan-700 disabled:opacity-50 mt-4"
+                className="group/btn relative h-10 w-full rounded-md bg-brand-primary text-text-primary font-medium transition duration-300 hover:bg-brand-primary-hover disabled:opacity-50 mt-4"
               >
                 {loading ? "Updating..." : "Update Password"}
                 <BottomGradient />
@@ -255,7 +255,7 @@ export default function ForgotPasswordPage() {
           <button
             type="button"
             onClick={() => window.location.href = "/login"}
-            className="text-sm text-gray-400 hover:text-white"
+            className="text-sm text-text-muted hover:text-text-primary"
           >
             ← Back to login
           </button>
@@ -270,8 +270,8 @@ export default function ForgotPasswordPage() {
 // ============================================
 const BottomGradient = () => (
   <>
-    <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
-    <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
+    <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-brand-accent to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
+    <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-brand-accent to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
   </>
 );
 
@@ -286,7 +286,7 @@ const LabelInputContainer = ({
 );
 
 const ErrorBox = ({ message }: { message: string }) => (
-  <div className="mt-3 p-2 rounded-md bg-red-900/30 border border-red-800 mb-4">
-    <p className="text-sm text-red-400 text-center">{message}</p>
+  <div className="mt-3 p-2 rounded-md bg-status-error/20 border border-status-error mb-4">
+    <p className="text-sm text-status-error text-center">{message}</p>
   </div>
 );

@@ -121,31 +121,31 @@ export default function VerifyEmailPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center p-4">
-        <p className="text-white">Loading...</p>
+      <div className="min-h-screen bg-bg-main flex items-center justify-center p-4">
+        <p className="text-text-primary">Loading...</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black flex flex-col justify-center items-center p-4">
+    <div className="min-h-screen bg-bg-main flex flex-col justify-center items-center p-4">
       <Link href="/" className="mb-8 flex items-center space-x-2">
-        <span className="font-bold text-cyan-500 text-3xl">⚡</span>
-        <span className="font-bold text-white text-3xl">HireXplore</span>
+        <span className="font-bold text-brand-primary text-3xl">⚡</span>
+        <span className="font-bold text-text-primary text-3xl">HireXplore</span>
       </Link>
 
-      <div className="w-full max-w-md bg-[#111] border border-gray-800 rounded-2xl p-8 shadow-2xl">
-        <h1 className="text-2xl font-bold text-white mb-2 text-center">Verify your email</h1>
+      <div className="w-full max-w-md bg-bg-card border border-border-default rounded-2xl p-8 shadow-2xl">
+        <h1 className="text-2xl font-bold text-text-primary mb-2 text-center">Verify your email</h1>
         
-        <div className="bg-blue-900/20 border border-blue-800/50 rounded-lg p-4 mb-6">
-          <p className="text-blue-300 text-sm text-center">
+        <div className="bg-brand-primary border border-border-focus rounded-lg p-4 mb-6">
+          <p className="text-brand-primary text-sm text-center">
             Your verified email is required so we can send you job application links and other important updates.
           </p>
         </div>
 
         {needsEmail ? (
           <form onSubmit={handleUpdateEmail} className="space-y-4">
-            <p className="text-gray-400 text-sm mb-4">
+            <p className="text-text-muted text-sm mb-4">
               Your authentication provider did not share an email address. Please provide one to continue.
             </p>
             <div className="space-y-2">
@@ -159,21 +159,21 @@ export default function VerifyEmailPage() {
                 required
               />
             </div>
-            <Button type="submit" className="w-full bg-white text-black hover:bg-gray-200" disabled={updatingEmail}>
+            <Button type="submit" className="w-full bg-brand-primary text-text-primary hover:bg-brand-primary" disabled={updatingEmail}>
               {updatingEmail ? "Saving..." : "Continue"}
             </Button>
           </form>
         ) : (
           <div className="space-y-6">
             <div className="text-center">
-              <p className="text-gray-400 text-sm">We need to verify the email address:</p>
-              <p className="text-white font-medium mt-1">{email}</p>
+              <p className="text-text-muted text-sm">We need to verify the email address:</p>
+              <p className="text-text-primary font-medium mt-1">{email}</p>
             </div>
             
             {!otpSent ? (
               <Button 
                 onClick={() => handleSendOTP()} 
-                className="w-full bg-cyan-600 text-white hover:bg-cyan-700" 
+                className="w-full bg-brand-primary text-text-primary hover:bg-brand-primary-hover" 
                 disabled={sendingOTP}
               >
                 {sendingOTP ? "Sending code..." : "Send Verification Code"}
@@ -193,7 +193,7 @@ export default function VerifyEmailPage() {
                     required
                   />
                 </div>
-                <Button type="submit" className="w-full bg-white text-black hover:bg-gray-200 mt-2" disabled={verifying || otp.length < 6}>
+                <Button type="submit" className="w-full bg-brand-primary text-text-primary hover:bg-brand-primary mt-2" disabled={verifying || otp.length < 6}>
                   {verifying ? "Verifying..." : "Verify & Continue"}
                 </Button>
                 
@@ -201,7 +201,7 @@ export default function VerifyEmailPage() {
                   <button 
                     type="button" 
                     onClick={() => handleSendOTP()} 
-                    className="text-xs text-cyan-500 hover:underline"
+                    className="text-xs text-brand-primary hover:underline"
                     disabled={sendingOTP}
                   >
                     Didn&apos;t receive it? Resend code

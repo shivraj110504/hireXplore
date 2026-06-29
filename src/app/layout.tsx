@@ -30,12 +30,12 @@ export default function RootLayout({
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
     >
-      <body className="min-h-full flex flex-col bg-black text-white">
+      <body className="min-h-full flex flex-col bg-bg-main text-text-primary">
         <div className="flex-grow flex flex-col">
           {children}
         </div>
         <FooterComponent />
-        <Toaster theme="dark" position="bottom-right" />
+        <Toaster theme="dark" position="bottom-right" richColors />
       </body>
     </html>
   );

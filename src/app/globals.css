@@ -4,8 +4,33 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  --color-brand-primary: #7B3FE4;
+  --color-brand-primary-hover: #5E27C2;
+  --color-brand-primary-active: #4A1B9E;
+  --color-brand-secondary: #43219E;
+  --color-brand-accent: #A67CFF;
+  
+  --color-bg-main: #08040D;
+  --color-bg-nav: #050208;
+  --color-bg-card: #13091F;
+  --color-bg-card-elevated: #1C0E2E;
+  --color-bg-hover: #261340;
+  --color-bg-selected: #3D1E6D;
+  
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #A9A4B8;
+  --color-text-muted: #746E82;
+  --color-text-disabled: #4D4759;
+  
+  --color-border-default: #2A1B3D;
+  --color-border-hover: #4A2B66;
+  --color-border-focus: #7B3FE4;
+  
+  --color-status-success: #00FF66;
+  --color-status-info: #3B82F6;
+  --color-status-warning: #F59E0B;
+  --color-status-error: #EF4444;
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   
@@ -42,6 +67,18 @@
 
 @layer base {
   body {
-    @apply bg-black text-white font-sans;
+    @apply bg-bg-main text-text-primary font-sans;
+  }
+}
+
+@layer utilities {
+  .bg-brand-gradient {
+    background: linear-gradient(135deg, #7B3FE4, #A67CFF, #43219E);
+  }
+  .text-brand-gradient {
+    background: linear-gradient(135deg, #7B3FE4, #A67CFF, #43219E);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 }

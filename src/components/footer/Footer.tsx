@@ -28,7 +28,7 @@ export default function FooterComponent() {
   ];
 
   return (
-    <footer className="bg-[#050505] text-white border-t border-gray-900 pt-16 pb-8">
+    <footer className="bg-bg-nav text-text-primary border-t border-border-default pt-16 pb-8">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-8">
           {/* Logo and Intro */}
@@ -37,15 +37,15 @@ export default function FooterComponent() {
               <img 
                 src="/HireXplore.png" 
                 alt="HireXplore Logo" 
-                className="h-14 w-auto object-contain drop-shadow-[0_0_8px_rgba(255,215,0,0.4)] transition-transform duration-300 hover:scale-[1.03]"
+                className="h-14 w-auto object-contain drop-shadow-[0_0_8px_rgba(123,63,228,0.6)] transition-transform duration-300 hover:scale-[1.03]"
               />
             </Link>
-            <p className="text-gray-400 text-sm leading-relaxed mt-2">
+            <p className="text-text-muted text-sm leading-relaxed mt-2">
               Empowering your career with AI-driven job matching. Discover your next big opportunity without the hassle.
             </p>
             <div className="flex gap-4 mt-2">
               {socialLinks.map((social, idx) => (
-                <a key={idx} href={social.link} className="text-gray-500 hover:text-cyan-500 transition-colors">
+                <a key={idx} href={social.link} className="text-text-disabled hover:text-brand-primary transition-colors">
                   {social.icon}
                 </a>
               ))}
@@ -54,13 +54,13 @@ export default function FooterComponent() {
 
           {/* Company Links */}
           <div className="flex flex-col gap-4 lg:ml-auto">
-            <h3 className="text-lg font-bold text-white tracking-wide">Company</h3>
+            <h3 className="text-lg font-bold text-text-primary tracking-wide">Company</h3>
             <ul className="flex flex-col gap-3">
               {companyLinks.map((item, idx) => (
                 <li key={idx}>
                   <Link
                     href={item.link}
-                    className="text-gray-400 hover:text-cyan-400 text-sm transition-colors"
+                    className="text-text-muted hover:text-brand-primary text-sm transition-colors"
                   >
                     {item.name}
                   </Link>
@@ -71,13 +71,13 @@ export default function FooterComponent() {
 
           {/* Legal Links */}
           <div className="flex flex-col gap-4 lg:ml-auto">
-            <h3 className="text-lg font-bold text-white tracking-wide">Legal</h3>
+            <h3 className="text-lg font-bold text-text-primary tracking-wide">Legal</h3>
             <ul className="flex flex-col gap-3">
               {legalLinks.map((item, idx) => (
                 <li key={idx}>
                   <Link
                     href={item.link}
-                    className="text-gray-400 hover:text-cyan-400 text-sm transition-colors"
+                    className="text-text-muted hover:text-brand-primary text-sm transition-colors"
                   >
                     {item.name}
                   </Link>
@@ -89,11 +89,11 @@ export default function FooterComponent() {
           {/* Auth Actions */}
           {!session ? (
             <div className="flex flex-col gap-4 lg:ml-auto">
-              <h3 className="text-lg font-bold text-white tracking-wide">Get Started</h3>
-              <p className="text-sm text-gray-400">Join thousands of job seekers today.</p>
+              <h3 className="text-lg font-bold text-text-primary tracking-wide">Get Started</h3>
+              <p className="text-sm text-text-muted">Join thousands of job seekers today.</p>
               <div className="flex flex-col sm:flex-row gap-3 mt-2">
                 <Link href="/login" className="w-full sm:w-auto">
-                  <Button className="w-full bg-transparent border border-gray-700 text-white hover:bg-gray-800">
+                  <Button className="w-full bg-transparent border border-border-default text-text-primary hover:bg-bg-hover">
                     Log In
                   </Button>
                 </Link>
@@ -104,19 +104,19 @@ export default function FooterComponent() {
             </div>
           ) : (
             <div className="flex flex-col gap-4 lg:ml-auto">
-              <h3 className="text-lg font-bold text-white tracking-wide">Account</h3>
-              <Link href="/profile" className="text-gray-400 hover:text-cyan-400 text-sm transition-colors">
+              <h3 className="text-lg font-bold text-text-primary tracking-wide">Account</h3>
+              <Link href="/profile" className="text-text-muted hover:text-brand-primary text-sm transition-colors">
                 Go to Profile →
               </Link>
             </div>
           )}
         </div>
 
-        <div className="mt-16 border-t border-gray-900 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-gray-500 text-sm text-center md:text-left">
+        <div className="mt-16 border-t border-border-default pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
+          <p className="text-text-disabled text-sm text-center md:text-left">
             &copy; {new Date().getFullYear()} HireXplore. All rights reserved.
           </p>
-          <p className="text-gray-600 text-xs text-center md:text-right">
+          <p className="text-text-muted text-xs text-center md:text-right">
             Engineered for Engineers by an Engineer.
           </p>
         </div>

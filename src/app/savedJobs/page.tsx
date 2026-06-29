@@ -43,8 +43,8 @@ export default function SavedJobsPage() {
 
   if (isPending || loading) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-bg-main flex items-center justify-center">
+        <div className="w-8 h-8 border-2 border-border-focus border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -55,21 +55,21 @@ export default function SavedJobsPage() {
     <>
       <DashNavbar />
 
-      <div className="min-h-screen bg-black pt-24 px-4 pb-12">
+      <div className="min-h-screen bg-bg-main pt-24 px-4 pb-12">
         <div className="max-w-7xl mx-auto animate-in fade-in slide-in-from-bottom-4 duration-500">
           <div className="flex items-center justify-between mb-8">
-            <h1 className="text-3xl font-bold text-white">Saved Jobs</h1>
+            <h1 className="text-3xl font-bold text-text-primary">Saved Jobs</h1>
           </div>
           
           <div className="w-full">
             {jobs.length === 0 ? (
-              <div className="text-center py-20 bg-[#171717] rounded-xl border border-gray-800">
+              <div className="text-center py-20 bg-bg-card rounded-xl border border-border-default">
                 <span className="text-5xl mb-4 block">🔖</span>
-                <h3 className="text-xl font-medium text-white mb-2">No saved jobs yet</h3>
-                <p className="text-gray-400 mb-6">Jobs you save will appear here for easy access.</p>
+                <h3 className="text-xl font-medium text-text-primary mb-2">No saved jobs yet</h3>
+                <p className="text-text-muted mb-6">Jobs you save will appear here for easy access.</p>
                 <button 
                   onClick={() => router.push('/findJobs')}
-                  className="px-6 py-2 bg-cyan-600 hover:bg-cyan-700 text-white rounded-md transition-colors font-medium shadow-[0_0_15px_rgba(8,145,178,0.3)]"
+                  className="px-6 py-2 bg-brand-primary hover:bg-brand-primary-hover text-text-primary rounded-md transition-colors font-medium shadow-[0_0_15px_rgba(8,145,178,0.3)]"
                 >
                   Find Jobs Now
                 </button>

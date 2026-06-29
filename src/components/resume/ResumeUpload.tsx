@@ -11,11 +11,45 @@ interface ResumeUploadProps {
 
 import { authClient } from "@/lib/auth-client";
 
+function base64ToFile(base64String: string, filename: string, mimeType: string): File {
+  const byteString = atob(base64String);
+  const ab = new ArrayBuffer(byteString.length);
+  const ia = new Uint8Array(ab);
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+  const blob = new Blob([ab], { type: mimeType });
+  return new File([blob], filename, { type: mimeType });
+}
+
 export default function ResumeUpload({ onJobsFetched, isFetching, setIsFetching }: ResumeUploadProps) {
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const { data: session } = authClient.useSession();
+  const [isLoadingSaved, setIsLoadingSaved] = useState(true);
+
+  // Fetch saved resume on mount
+  useEffect(() => {
+    async function loadSavedResume() {
+      if (!session) return;
+      try {
+        const res = await fetch("/api/resume");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.resume) {
+            const savedFile = base64ToFile(data.resume.data, data.resume.fileName, data.resume.fileType);
+            setFile(savedFile);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to load saved resume:", err);
+      } finally {
+        setIsLoadingSaved(false);
+      }
+    }
+    loadSavedResume();
+  }, [session]);
 
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -33,6 +67,21 @@ export default function ResumeUpload({ onJobsFetched, isFetching, setIsFetching 
     return `${m}:${s < 10 ? '0' : ''}${s}`;
   };
 
+  const saveResumeToDB = async (selectedFile: File) => {
+    if (!session) return;
+    const formData = new FormData();
+    formData.append("resume", selectedFile);
+    try {
+      await fetch("/api/resume", {
+        method: "POST",
+        body: formData,
+      });
+      toast.success("Resume saved to your profile!");
+    } catch (e) {
+      console.error("Failed to save resume", e);
+    }
+  };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const selectedFile = e.target.files[0];
@@ -41,6 +90,8 @@ export default function ResumeUpload({ onJobsFetched, isFetching, setIsFetching 
         return;
       }
       setFile(selectedFile);
+      saveResumeToDB(selectedFile);
+      
       // Clear job duplicate cache so re-uploading ensures a fresh search
       if (session?.user?.id) {
         localStorage.removeItem(`seen_jobs_${session.user.id}`);
@@ -62,6 +113,8 @@ export default function ResumeUpload({ onJobsFetched, isFetching, setIsFetching 
         return;
       }
       setFile(selectedFile);
+      saveResumeToDB(selectedFile);
+
       if (session?.user?.id) {
         localStorage.removeItem(`seen_jobs_${session.user.id}`);
       }
@@ -112,8 +165,6 @@ export default function ResumeUpload({ onJobsFetched, isFetching, setIsFetching 
         toast.info(data.message);
       } else if (newJobs.length === 0 && fetchedJobs.length > 0) {
         toast.info("AI found jobs, but you have already seen them all in previous searches!");
-      } else {
-        toast.success(`Found ${newJobs.length} new matching jobs!`);
       }
       
       onJobsFetched(newJobs);
@@ -126,14 +177,25 @@ export default function ResumeUpload({ onJobsFetched, isFetching, setIsFetching 
     }
   };
 
+  if (isLoadingSaved) {
+    return (
+      <NeonGradientCard className="w-full max-w-2xl mx-auto !bg-bg-card [&>*]:!bg-bg-card">
+        <div className="p-8 text-center flex flex-col items-center justify-center">
+          <div className="w-8 h-8 border-2 border-border-focus border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="text-text-muted">Loading your profile...</p>
+        </div>
+      </NeonGradientCard>
+    );
+  }
+
   return (
-    <NeonGradientCard className="w-full max-w-2xl mx-auto !bg-[#171717] [&>*]:!bg-[#171717]">
+    <NeonGradientCard className="w-full max-w-2xl mx-auto !bg-bg-card [&>*]:!bg-bg-card">
       <div className="p-8 text-center">
-        <h2 className="text-2xl font-bold text-white mb-2">Upload Your Resume</h2>
-        <p className="text-gray-400 mb-6">Supported formats: PDF, DOC, DOCX</p>
+        <h2 className="text-2xl font-bold text-text-primary mb-2">Upload Your Resume</h2>
+        <p className="text-text-muted mb-6">Supported formats: PDF, DOC, DOCX</p>
         
-        <div 
-          className={`border-2 border-dashed rounded-xl p-10 mb-6 cursor-pointer transition-colors ${file ? 'border-cyan-500 bg-cyan-950/20' : 'border-gray-600 hover:border-gray-400'}`}
+          <div 
+            className={`border-2 border-dashed rounded-xl p-10 mb-6 cursor-pointer transition-colors ${file ? 'border-border-focus bg-brand-primary/10 shadow-[0_0_20px_var(--color-brand-primary)]' : 'border-border-default hover:border-brand-accent/50 hover:bg-bg-hover/30'}`}
           onDragOver={(e) => e.preventDefault()}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
@@ -151,25 +213,25 @@ export default function ResumeUpload({ onJobsFetched, isFetching, setIsFetching 
           {file ? (
             <div className="flex flex-col items-center">
               <span className="text-4xl mb-2">📄</span>
-              <p className="text-white font-medium">{file.name}</p>
-              <p className="text-sm text-cyan-400 mt-2">Click or drag to replace</p>
+              <p className="text-text-primary font-medium">{file.name}</p>
+              <p className="text-sm text-brand-accent mt-2 font-medium bg-brand-primary/20 px-4 py-1.5 rounded-full border border-brand-primary/30">Click or drag to replace</p>
             </div>
           ) : (
             <div className="flex flex-col items-center">
               <span className="text-4xl mb-2">☁️</span>
-              <p className="text-white font-medium">Drag & drop your resume here</p>
-              <p className="text-sm text-gray-500 mt-2">or click to browse</p>
+              <p className="text-text-primary font-medium">Drag & drop your resume here</p>
+              <p className="text-sm text-text-disabled mt-2">or click to browse</p>
             </div>
           )}
         </div>
 
         {timeLeft !== null && (
-          <div className="mb-6 p-4 rounded-lg border border-cyan-900 bg-cyan-950/30">
-            <p className="text-cyan-300 font-semibold mb-2">AI is analyzing and matching your profile...</p>
-            <div className="text-4xl font-mono font-bold text-white tracking-wider">
+          <div className="mb-6 p-4 rounded-lg border border-border-focus bg-brand-primary/20 shadow-[0_0_20px_var(--color-brand-primary)]">
+            <p className="text-brand-accent font-semibold mb-2">AI is analyzing and matching your profile...</p>
+            <div className="text-4xl font-mono font-bold text-text-primary tracking-wider">
               {formatTime(timeLeft)}
             </div>
-            <p className="text-xs text-cyan-500/70 mt-2">Expected processing time</p>
+            <p className="text-xs text-text-secondary mt-2">Expected processing time</p>
           </div>
         )}
 
@@ -178,15 +240,15 @@ export default function ResumeUpload({ onJobsFetched, isFetching, setIsFetching 
           disabled={!file || isFetching}
           className={`w-full py-3 rounded-lg font-bold text-lg transition-all ${
             !file 
-              ? 'bg-gray-800 text-gray-500 cursor-not-allowed' 
+              ? 'bg-bg-hover text-text-disabled cursor-not-allowed' 
               : isFetching 
-                ? 'bg-cyan-800 text-cyan-200 cursor-wait' 
-                : 'bg-cyan-600 hover:bg-cyan-500 text-white shadow-[0_0_15px_rgba(8,145,178,0.5)]'
+                ? 'bg-border-hover text-brand-primary cursor-wait' 
+                : 'bg-brand-primary hover:bg-brand-primary-hover text-text-primary shadow-[0_0_15px_rgba(8,145,178,0.5)]'
           }`}
         >
           {isFetching ? (
             <span className="flex items-center justify-center gap-2">
-              <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></span>
+              <span className="w-5 h-5 border-2 border-border-default border-t-transparent rounded-full animate-spin"></span>
               Finding Matches...
             </span>
           ) : (
