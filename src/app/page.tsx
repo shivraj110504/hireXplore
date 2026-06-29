@@ -1,7 +1,6 @@
 import PublicNavbar from "@/components/navbar/Navbar";
 import { HeroSparkles } from "@/components/hero/HeroSparkles";
 import { NeonGradientCard } from "@/components/ui/neon-gradient-card";
-import FooterComponent from "@/components/footer/Footer";
 
 export default function Home() {
   return (
@@ -105,7 +104,7 @@ export default function Home() {
         </div>
       </div>
 
-      <FooterComponent />
+      
     </>
   );
 }
