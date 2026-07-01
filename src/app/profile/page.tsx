@@ -1,233 +1,216 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import DashNavbar from "@/components/navbar/DashNavbar";
 import { authClient } from "@/lib/auth-client";
-import { MagicCard } from "@/components/magicui/magic-card";
-import { toast } from "sonner";
+import { Pencil, MapPin, Mail, Phone, ExternalLink, Briefcase, GraduationCap, Code, Link as LinkIcon } from "lucide-react";
+import Link from "next/link";
 
 export default function ProfilePage() {
   const router = useRouter();
   const { data: session, isPending } = authClient.useSession();
-  const [savedResume, setSavedResume] = useState<{ fileName: string; updatedAt: string } | null>(null);
-  const [isLoadingResume, setIsLoadingResume] = useState(true);
-  const [isUploading, setIsUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-
-  const handleLogout = async () => {
-    try {
-      await authClient.signOut();
-      router.push("/login");
-    } catch (err) {
-      console.error("Logout error:", err);
-    }
-  };
-
-  const fetchResume = async () => {
-    setIsLoadingResume(true);
-    try {
-      const res = await fetch("/api/resume");
-      if (res.ok) {
-        const data = await res.json();
-        setSavedResume(data.resume || null);
-      }
-    } catch (err) {
-      console.error("Failed to fetch resume", err);
-    } finally {
-      setIsLoadingResume(false);
-    }
-  };
+  const [profile, setProfile] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isFetchingJobs, setIsFetchingJobs] = useState(false);
 
   useEffect(() => {
     if (!isPending && !session) {
       router.push("/login");
-    } else if (session) {
-      fetchResume();
-    }
-  }, [isPending, session, router]);
-
-  const handleDeleteResume = async () => {
-    if (!confirm("Are you sure you want to delete your saved resume?")) return;
-    try {
-      const res = await fetch("/api/resume", { method: "DELETE" });
-      if (res.ok) {
-        toast.success("Resume deleted successfully");
-        setSavedResume(null);
-      } else {
-        toast.error("Failed to delete resume");
-      }
-    } catch (err) {
-      console.error("Delete resume error", err);
-      toast.error("An error occurred while deleting your resume");
-    }
-  };
-
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    if (file.type !== "application/pdf" && !file.name.endsWith(".doc") && !file.name.endsWith(".docx")) {
-      toast.error("Invalid file format. Please upload PDF, DOC, or DOCX.");
       return;
     }
 
-    setIsUploading(true);
-    const formData = new FormData();
-    formData.append("resume", file);
-
-    try {
-      const res = await fetch("/api/resume", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (res.ok) {
-        toast.success("Resume updated successfully!");
-        fetchResume(); // Refresh the resume data
-      } else {
-        toast.error("Failed to upload resume.");
-      }
-    } catch (err) {
-      console.error("Upload error", err);
-      toast.error("An error occurred during upload.");
-    } finally {
-      setIsUploading(false);
-      if (fileInputRef.current) {
-        fileInputRef.current.value = "";
-      }
+    if (session) {
+      fetch(`/api/profile?t=${Date.now()}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data.profile) setProfile(data.profile);
+        })
+        .catch(err => console.error(err))
+        .finally(() => setIsLoading(false));
     }
-  };
+  }, [isPending, session, router]);
 
-  if (isPending) {
+  if (isPending || isLoading) {
     return (
       <div className="min-h-screen bg-bg-main flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-border-focus border-t-transparent rounded-full animate-spin"></div>
+        <div className="w-8 h-8 border-2 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
 
   if (!session) return null;
-  const user = session.user;
+
+  const info = profile?.personalInfo || {};
 
   return (
     <>
       <DashNavbar />
-
+      
       <div className="min-h-screen bg-bg-main pt-24 px-4 pb-12">
-        <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl font-bold text-text-primary mb-8">Your Profile</h1>
-
-          <MagicCard className="w-full mb-8 flex-col bg-bg-card border border-border-default shadow-2xl" gradientColor="#2A2345">
-            <div className="p-6 relative z-10">
-              <h2 className="text-2xl font-bold text-text-primary mb-6">Account Information</h2>
-
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row sm:items-center py-3 border-b border-border-default">
-                  <span className="text-text-muted w-32 font-medium mb-1 sm:mb-0">Name</span>
-                  <span className="text-text-primary">{user.name || "N/A"}</span>
-                </div>
-
-                <div className="flex flex-col sm:flex-row sm:items-center py-3 border-b border-border-default">
-                  <span className="text-text-muted w-32 font-medium mb-1 sm:mb-0">Email</span>
-                  <span className="text-text-primary">{user.email}</span>
-                </div>
-
-                <div className="flex flex-col sm:flex-row sm:items-center py-3 border-b border-border-default">
-                  <span className="text-text-muted w-32 font-medium mb-1 sm:mb-0">Status</span>
-                  <span className="text-text-primary">
-                    {user.emailVerified ? (
-                      <span className="text-status-success bg-status-success/20 px-2 py-1 rounded text-sm border border-status-success">Verified</span>
-                    ) : (
-                      <span className="text-status-warning bg-status-warning/20 px-2 py-1 rounded text-sm border border-status-warning">Pending Verification</span>
-                    )}
-                  </span>
-                </div>
-              </div>
-
-              <div className="mt-8 pt-6 border-t border-border-default flex justify-between items-center">
-                <button
-                  onClick={handleLogout}
-                  className="px-6 py-2 bg-status-error/20 hover:bg-status-error/40 border border-status-error/50 text-status-error rounded-md transition-colors font-medium"
-                >
-                  Logout
-                </button>
-                
-                <button
-                  onClick={() => router.push('/savedJobs')}
-                  className="px-6 py-2 bg-brand-primary hover:bg-brand-primary-hover text-text-primary rounded-md transition-colors font-medium shadow-[0_0_15px_rgba(8,145,178,0.3)]"
-                >
-                  See All Saved Jobs
-                </button>
-              </div>
-            </div>
-          </MagicCard>
-
-          <MagicCard className="w-full flex-col bg-bg-card border border-border-default shadow-2xl" gradientColor="#2A2345">
-            <div className="p-6 relative z-10">
-              <h2 className="text-2xl font-bold text-text-primary mb-6">Your Resume</h2>
+        <div className="max-w-6xl mx-auto flex flex-col lg:flex-row gap-8">
+          
+          {/* LEFT COLUMN: Main Content */}
+          <div className="flex-1 space-y-6">
+            
+            {/* Header / Hero Section */}
+            <div className="bg-bg-card border border-border-default rounded-2xl overflow-hidden relative shadow-lg">
+              <div className="h-32 bg-gradient-to-r from-brand-primary to-brand-secondary opacity-80"></div>
               
-              {isLoadingResume ? (
-                <div className="flex items-center space-x-3 text-text-muted">
-                  <div className="w-5 h-5 border-2 border-border-default border-t-transparent rounded-full animate-spin"></div>
-                  <span>Loading resume data...</span>
+              <Link href="/profile/edit" className="absolute top-4 right-4 bg-bg-main/50 hover:bg-bg-main p-2 rounded-full text-white backdrop-blur-md transition-all">
+                <Pencil className="w-5 h-5" />
+              </Link>
+              
+              <div className="px-8 pb-8">
+                <div className="w-32 h-32 bg-bg-hover border-4 border-bg-card rounded-full -mt-16 flex items-center justify-center overflow-hidden shadow-xl z-10 relative">
+                  {profile?.profilePicture ? (
+                    <img src={profile.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="text-4xl text-brand-primary font-bold">
+                      {info.name ? info.name.charAt(0).toUpperCase() : session.user.name.charAt(0).toUpperCase()}
+                    </span>
+                  )}
                 </div>
-              ) : savedResume ? (
-                <div className="bg-bg-card border border-border-default rounded-lg p-5">
-                  <div className="flex items-start justify-between">
-                    <div className="flex items-center space-x-4">
-                      <div className="bg-bg-selected/30 p-3 rounded-lg border border-border-hover/50">
-                        <span className="text-2xl">📄</span>
-                      </div>
-                      <div>
-                        <p className="text-text-primary font-medium text-lg">{savedResume.fileName}</p>
-                        <p className="text-sm text-text-muted mt-1">
-                          Last updated: {new Date(savedResume.updatedAt).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-3">
-                      <button
-                        onClick={() => fileInputRef.current?.click()}
-                        disabled={isUploading}
-                        className="px-4 py-2 bg-bg-hover hover:bg-bg-hover border border-border-default text-text-primary rounded-md transition-colors text-sm font-medium"
-                      >
-                        {isUploading ? "Uploading..." : "Update"}
-                      </button>
-                      <button
-                        onClick={handleDeleteResume}
-                        disabled={isUploading}
-                        className="px-4 py-2 bg-status-error/20 hover:bg-status-error border border-status-error text-status-error rounded-md transition-colors text-sm font-medium"
-                      >
-                        Delete
-                      </button>
-                    </div>
+                
+                <div className="mt-4">
+                  <h1 className="text-3xl font-bold text-text-primary">
+                    {info.name || session.user.name}
+                  </h1>
+                  <p className="text-xl text-brand-accent mt-1">{info.title || "Add a professional title"}</p>
+                  
+                  <div className="flex flex-wrap gap-4 mt-4 text-text-secondary text-sm">
+                    {info.location && (
+                      <span className="flex items-center gap-1"><MapPin className="w-4 h-4"/> {info.location}</span>
+                    )}
+                    <span className="flex items-center gap-1"><Mail className="w-4 h-4"/> {info.email || session.user.email}</span>
+                    {info.phone && (
+                      <span className="flex items-center gap-1"><Phone className="w-4 h-4"/> {info.phone}</span>
+                    )}
                   </div>
                 </div>
-              ) : (
-                <div className="bg-bg-card border border-dashed border-border-default rounded-lg p-8 text-center">
-                  <span className="text-4xl block mb-3">☁️</span>
-                  <p className="text-text-primary font-medium mb-1">No resume uploaded</p>
-                  <p className="text-sm text-text-muted mb-5">Upload your resume to speed up your job search.</p>
-                  
-                  <button
-                    onClick={() => fileInputRef.current?.click()}
-                    disabled={isUploading}
-                    className="px-6 py-2 bg-brand-primary hover:bg-brand-primary-hover text-text-primary rounded-md transition-colors font-medium shadow-[0_0_10px_rgba(8,145,178,0.3)]"
-                  >
-                    {isUploading ? "Uploading..." : "Upload Resume"}
-                  </button>
-                </div>
-              )}
-
-              <input
-                type="file"
-                className="hidden"
-                accept=".pdf,.doc,.docx"
-                onChange={handleFileUpload}
-                ref={fileInputRef}
-              />
+              </div>
             </div>
-          </MagicCard>
+
+            {/* Summary */}
+            <div className="bg-bg-card border border-border-default rounded-2xl p-8 shadow-lg relative">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold text-text-primary">Summary</h2>
+                <Link href="/profile/edit" className="text-text-muted hover:text-brand-primary transition-colors"><Pencil className="w-4 h-4"/></Link>
+              </div>
+              <p className="text-text-secondary leading-relaxed whitespace-pre-wrap">
+                {profile?.summary || "Add a summary to highlight your professional experience."}
+              </p>
+            </div>
+
+            {/* Experience */}
+            <div className="bg-bg-card border border-border-default rounded-2xl p-8 shadow-lg relative">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold text-text-primary flex items-center gap-2">
+                  <Briefcase className="w-5 h-5 text-brand-primary" /> Experience
+                </h2>
+                <Link href="/profile/edit" className="text-text-muted hover:text-brand-primary transition-colors"><Pencil className="w-4 h-4"/></Link>
+              </div>
+              
+              {profile?.experience && profile.experience.length > 0 ? (
+                <div className="space-y-6">
+                  {profile.experience.map((exp: any, idx: number) => (
+                    <div key={idx} className="relative pl-6 border-l-2 border-border-focus">
+                      <div className="absolute w-3 h-3 bg-brand-primary rounded-full -left-[7px] top-1.5"></div>
+                      <h3 className="text-lg font-bold text-text-primary">{exp.role}</h3>
+                      <p className="text-brand-accent font-medium">{exp.company}</p>
+                      <p className="text-text-muted text-sm mt-1">{exp.duration}</p>
+                      <p className="text-text-secondary mt-2 text-sm whitespace-pre-wrap">{exp.description}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-text-muted text-sm">No experience added yet. Upload your resume to auto-fill this section!</p>
+              )}
+            </div>
+
+            {/* Education */}
+            <div className="bg-bg-card border border-border-default rounded-2xl p-8 shadow-lg relative">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold text-text-primary flex items-center gap-2">
+                  <GraduationCap className="w-5 h-5 text-brand-primary" /> Education
+                </h2>
+                <Link href="/profile/edit" className="text-text-muted hover:text-brand-primary transition-colors"><Pencil className="w-4 h-4"/></Link>
+              </div>
+              
+              {profile?.education && profile.education.length > 0 ? (
+                <div className="space-y-6">
+                  {profile.education.map((edu: any, idx: number) => (
+                    <div key={idx}>
+                      <h3 className="text-lg font-bold text-text-primary">{edu.institution}</h3>
+                      <p className="text-brand-accent font-medium">{edu.degree}</p>
+                      <p className="text-text-muted text-sm mt-1">{edu.year}</p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="text-text-muted text-sm">No education added yet.</p>
+              )}
+            </div>
+            
+          </div>
+          
+          {/* RIGHT COLUMN: Sidebar */}
+          <div className="lg:w-80 space-y-6">
+
+            {/* Skills */}
+            <div className="bg-bg-card border border-border-default rounded-2xl p-6 shadow-lg relative">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-bold text-text-primary flex items-center gap-2">
+                  <Code className="w-5 h-5 text-brand-primary" /> Skills
+                </h2>
+                <Link href="/profile/edit" className="text-text-muted hover:text-brand-primary transition-colors"><Pencil className="w-4 h-4"/></Link>
+              </div>
+              
+              <div className="flex flex-wrap gap-2">
+                {profile?.skills && profile.skills.length > 0 ? (
+                  profile.skills.map((skill: string, idx: number) => (
+                    <span key={idx} className="px-3 py-1 bg-brand-primary/20 text-brand-accent rounded-full text-sm font-medium border border-brand-primary/30">
+                      {skill}
+                    </span>
+                  ))
+                ) : (
+                  <p className="text-text-muted text-sm">No skills added.</p>
+                )}
+              </div>
+            </div>
+
+            {/* Links */}
+            <div className="bg-bg-card border border-border-default rounded-2xl p-6 shadow-lg relative">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-bold text-text-primary flex items-center gap-2">
+                  <LinkIcon className="w-5 h-5 text-brand-primary" /> Links
+                </h2>
+                <Link href="/profile/edit" className="text-text-muted hover:text-brand-primary transition-colors"><Pencil className="w-4 h-4"/></Link>
+              </div>
+              
+              <div className="space-y-3">
+                {info.linkedin && (
+                  <a href={info.linkedin} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-text-secondary hover:text-brand-primary transition-colors text-sm">
+                    <ExternalLink className="w-4 h-4" /> LinkedIn
+                  </a>
+                )}
+                {info.github && (
+                  <a href={info.github} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-text-secondary hover:text-brand-primary transition-colors text-sm">
+                    <ExternalLink className="w-4 h-4" /> GitHub
+                  </a>
+                )}
+                {info.portfolio && (
+                  <a href={info.portfolio} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-text-secondary hover:text-brand-primary transition-colors text-sm">
+                    <ExternalLink className="w-4 h-4" /> Portfolio
+                  </a>
+                )}
+                {!info.linkedin && !info.github && !info.portfolio && (
+                  <p className="text-text-muted text-sm">No links added.</p>
+                )}
+              </div>
+            </div>
+            
+          </div>
+
         </div>
       </div>
     </>

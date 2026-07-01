@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { IconBrandGithub, IconBrandGoogle, IconMail, IconChevronDown, IconChevronUp } from "@tabler/icons-react";
+import { Eye, EyeOff } from "lucide-react";
 import { authClient } from "@/lib/auth-client";
 
 const SignupPage = () => {
@@ -20,6 +21,7 @@ const SignupPage = () => {
     password: "",
     confirmPassword: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
   const [otp, setOtp] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -369,28 +371,46 @@ const SignupPage = () => {
               <div className="flex space-x-2">
                 <LabelInputContainer>
                   <Label htmlFor="password" className="text-text-primary text-xs">Password</Label>
-                  <Input
-                    id="password"
-                    placeholder="••••••••"
-                    type="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required={showEmailForm}
-                    className="text-text-primary placeholder-gray-400 border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary h-9 text-sm bg-bg-card border-border-default"
-                  />
+                  <div className="relative">
+                    <Input
+                      id="password"
+                      placeholder="••••••••"
+                      type={showPassword ? "text" : "password"}
+                      value={formData.password}
+                      onChange={handleChange}
+                      required={showEmailForm}
+                      className="text-text-primary placeholder-gray-400 border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary h-9 text-sm bg-bg-card border-border-default pr-9"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary transition-colors focus:outline-none"
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                 </LabelInputContainer>
 
                 <LabelInputContainer>
                   <Label htmlFor="confirmPassword" className="text-text-primary text-xs">Confirm</Label>
-                  <Input
-                    id="confirmPassword"
-                    placeholder="••••••••"
-                    type="password"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    required={showEmailForm}
-                    className="text-text-primary placeholder-gray-400 border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary h-9 text-sm bg-bg-card border-border-default"
-                  />
+                  <div className="relative">
+                    <Input
+                      id="confirmPassword"
+                      placeholder="••••••••"
+                      type={showPassword ? "text" : "password"}
+                      value={formData.confirmPassword}
+                      onChange={handleChange}
+                      required={showEmailForm}
+                      className="text-text-primary placeholder-gray-400 border rounded-md focus:outline-none focus:ring-2 focus:ring-brand-primary h-9 text-sm bg-bg-card border-border-default pr-9"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-text-muted hover:text-text-primary transition-colors focus:outline-none"
+                    >
+                      {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                    </button>
+                  </div>
                 </LabelInputContainer>
               </div>
 

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { NeonGradientCard } from "@/components/ui/neon-gradient-card";
 
@@ -23,11 +24,14 @@ function base64ToFile(base64String: string, filename: string, mimeType: string):
 }
 
 export default function ResumeUpload({ onJobsFetched, isFetching, setIsFetching }: ResumeUploadProps) {
+  const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
   const { data: session } = authClient.useSession();
   const [isLoadingSaved, setIsLoadingSaved] = useState(true);
+  const [showPopup, setShowPopup] = useState(false);
+  const [pendingFile, setPendingFile] = useState<File | null>(null);
 
   // Fetch saved resume on mount
   useEffect(() => {
@@ -77,9 +81,44 @@ export default function ResumeUpload({ onJobsFetched, isFetching, setIsFetching 
         body: formData,
       });
       toast.success("Resume saved to your profile!");
+      
+      setPendingFile(selectedFile);
+      setShowPopup(true);
+      
     } catch (e) {
       console.error("Failed to save resume", e);
     }
+  };
+
+  const handlePopupYes = async () => {
+    setShowPopup(false);
+    if (!pendingFile) return;
+    const formData = new FormData();
+    formData.append("resume", pendingFile);
+    toast.info("Extracting details from resume...");
+    try {
+      const res = await fetch("/api/resume/parse", {
+        method: "POST",
+        body: formData,
+      });
+      
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.details || `Server returned ${res.status}`);
+      }
+      
+      toast.success("Profile updated successfully!");
+      router.refresh();
+    } catch(err: any) {
+      console.error(err);
+      toast.error(`Failed to update profile: ${err.message}`);
+    }
+    setPendingFile(null);
+  };
+
+  const handlePopupNo = () => {
+    setShowPopup(false);
+    setPendingFile(null);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -252,10 +291,35 @@ export default function ResumeUpload({ onJobsFetched, isFetching, setIsFetching 
               Finding Matches...
             </span>
           ) : (
-            "🔍 Find Matching Jobs"
+            "🚀 Find Matching Jobs"
           )}
         </button>
       </div>
+
+      {showPopup && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+          <div className="bg-bg-card-elevated border border-border-focus rounded-2xl p-6 shadow-2xl max-w-sm w-full animate-in fade-in zoom-in duration-200">
+            <h3 className="text-xl font-bold text-text-primary mb-2">Update Profile?</h3>
+            <p className="text-text-secondary text-sm mb-6">
+              Would you like us to automatically extract your skills, education, and experience from this resume and update your profile?
+            </p>
+            <div className="flex gap-3">
+              <button 
+                onClick={handlePopupNo}
+                className="flex-1 py-2 rounded-lg bg-bg-hover text-text-primary font-medium hover:bg-border-default transition-colors"
+              >
+                No, skip
+              </button>
+              <button 
+                onClick={handlePopupYes}
+                className="flex-1 py-2 rounded-lg bg-brand-primary hover:bg-brand-primary-hover text-white font-medium transition-colors shadow-lg"
+              >
+                Yes, update it
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </NeonGradientCard>
   );
 }

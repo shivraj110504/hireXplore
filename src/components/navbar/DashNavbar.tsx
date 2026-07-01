@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Navbar,
@@ -14,14 +14,27 @@ import {
 } from "@/components/ui/resizable-navbar";
 import Link from "next/link";
 import { FaUserCircle } from "react-icons/fa";
+import { Bell } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { authClient } from "@/lib/auth-client";
 
 export default function DashNavbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileOpen, setProfileOpen] = useState(false);
+  const [profilePic, setProfilePic] = useState<string | null>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    fetch("/api/profile")
+      .then(res => res.json())
+      .then(data => {
+        if (data.profile?.profilePicture) {
+          setProfilePic(data.profile.profilePicture);
+        }
+      })
+      .catch(err => console.error("Failed to load profile pic:", err));
+  }, []);
 
   const navItems = [
     { name: "Home", link: "/dashboard" },
@@ -47,81 +60,97 @@ export default function DashNavbar() {
         <NavbarLogo />
         <NavItems items={navItems} />
 
-        <div className="relative" ref={profileRef}>
-          <button
-            type="button"
-            onClick={() => setProfileOpen(!profileOpen)}
-            className="text-text-primary text-2xl p-1 rounded-full hover:text-text-secondary"
-            aria-label="User profile menu"
-          >
-            <FaUserCircle />
-          </button>
+        <div className="flex items-center gap-4" ref={profileRef}>
+          <Link href="/notifications" className="p-2 rounded-full hover:bg-bg-hover transition-colors">
+            <Bell className="w-5 h-5 text-text-primary hover:text-brand-primary" />
+          </Link>
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setProfileOpen(!profileOpen)}
+              className="text-text-primary rounded-full hover:opacity-80 transition-opacity overflow-hidden flex items-center justify-center w-8 h-8 border border-brand-primary"
+              aria-label="User profile menu"
+            >
+              {profilePic ? (
+                <img src={profilePic} alt="User" className="w-full h-full object-cover" />
+              ) : (
+                <FaUserCircle className="text-2xl" />
+              )}
+            </button>
 
-          <AnimatePresence>
-            {profileOpen && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="absolute right-0 mt-2 w-40 bg-bg-card-elevated text-text-primary rounded-lg shadow-lg overflow-hidden z-50"
-              >
-                <Link
-                  href="/profile"
-                  className="block px-4 py-2 hover:bg-bg-hover"
-                  onClick={() => setProfileOpen(false)}
+            <AnimatePresence>
+              {profileOpen && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute right-0 mt-2 w-40 bg-bg-card-elevated text-text-primary rounded-lg shadow-lg overflow-hidden z-50"
                 >
-                  Profile
-                </Link>
-
-                <button
-                  type="button"
-                  className="w-full text-left px-4 py-2 mt-1 bg-status-error hover:bg-status-error text-text-primary rounded-md transition"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </button>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                  <Link
+                    href="/profile"
+                    className="block px-4 py-2 hover:bg-bg-hover"
+                    onClick={() => setProfileOpen(false)}
+                  >
+                    Profile
+                  </Link>
+                  <Link
+                    href="/settings"
+                    className="block px-4 py-2 hover:bg-bg-hover"
+                    onClick={() => setProfileOpen(false)}
+                  >
+                    Settings
+                  </Link>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
       </NavBody>
 
       <MobileNav>
         <MobileNavHeader>
           <NavbarLogo />
-          <MobileNavToggle
-            isOpen={menuOpen}
-            onClick={() => setMenuOpen(!menuOpen)}
-          />
+          <div className="flex items-center gap-2">
+            <Link href="/notifications" className="p-2 rounded-full hover:bg-bg-hover transition-colors flex items-center justify-center">
+              <Bell className="w-5 h-5 text-text-primary hover:text-brand-primary" />
+            </Link>
+            <MobileNavToggle
+              isOpen={menuOpen}
+              onClick={() => setMenuOpen(!menuOpen)}
+            />
+          </div>
         </MobileNavHeader>
 
         <MobileNavMenu isOpen={menuOpen} onClose={() => setMenuOpen(false)}>
-          {navItems.map((item, index) => (
-            <Link
-              key={index}
-              href={item.link}
-              className="text-lg font-medium text-text-secondary"
-              onClick={() => setMenuOpen(false)}
-            >
-              {item.name}
-            </Link>
-          ))}
+          <div className="flex flex-col items-center justify-center w-full gap-5 py-6">
+            {navItems.map((item, index) => (
+              <Link
+                key={index}
+                href={item.link}
+                className="text-lg font-semibold text-text-secondary hover:text-brand-primary transition-colors"
+                onClick={() => setMenuOpen(false)}
+              >
+                {item.name}
+              </Link>
+            ))}
 
-          <div className="mt-4 border-t border-border-default pt-2">
+            <div className="w-16 h-px bg-border-focus my-2"></div>
+
             <Link
               href="/profile"
-              className="block px-4 py-2 text-text-secondary hover:bg-bg-hover rounded"
+              className="text-lg font-semibold text-text-secondary hover:text-brand-primary transition-colors"
               onClick={() => setMenuOpen(false)}
             >
               Profile
             </Link>
 
-            <button
-              className="w-full text-left px-4 py-2 hover:bg-status-error text-text-primary rounded"
-              onClick={handleLogout}
+            <Link
+              href="/settings"
+              className="text-lg font-semibold text-text-secondary hover:text-brand-primary transition-colors"
+              onClick={() => setMenuOpen(false)}
             >
-              Logout
-            </button>
+              Settings
+            </Link>
           </div>
         </MobileNavMenu>
       </MobileNav>
